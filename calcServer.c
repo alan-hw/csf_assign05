@@ -55,11 +55,13 @@ int chat_with_client(struct Calc *calc, int infd, int outfd) {
 
 int main(int argc, char **argv) {
   if(argc != 2){
-    errorHandler("Error: Invalid arguments");
+    errorHandler("Error: Invalid argument number");
   }
 
   int listenfd = Open_listenfd(argv[1]);
-
+	if (listenfd < 0) {
+		error("Error: Cannot open server.\n");
+	}
   struct Calc *networkCalc = calc_create();
   
   while (1) {
@@ -73,8 +75,9 @@ int main(int argc, char **argv) {
     }
     close(clientfd);
   }
-  close(listenfd);
   calc_destroy(networkCalc);
+  close(listenfd);
+
   return 0;
 }
 
